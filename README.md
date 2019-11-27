@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhaztheo%2FGPUImage.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhaztheo%2FGPUImage?ref=badge_shield)
+
 # GPUImage #
 
 <div style="float: right"><img src="http://sunsetlakesoftware.com/sites/default/files/GPUImageLogo.png" /></div>
@@ -29,6 +31,9 @@ This framework compares favorably to Core Image when handling video, taking only
 ## License ##
 
 BSD-style, with the full license available with the framework in License.txt.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhaztheo%2FGPUImage.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhaztheo%2FGPUImage?ref=badge_large)
 
 ## Technical requirements ##
 
