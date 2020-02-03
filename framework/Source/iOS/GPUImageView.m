@@ -97,35 +97,35 @@
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext useImageProcessingContext];
         
-        displayProgram = [[GPUImageContext sharedImageProcessingContext] programForVertexShaderString:kGPUImageVertexShaderString fragmentShaderString:kGPUImagePassthroughFragmentShaderString];
-        if (!displayProgram.initialized)
+        self->displayProgram = [[GPUImageContext sharedImageProcessingContext] programForVertexShaderString:kGPUImageVertexShaderString fragmentShaderString:kGPUImagePassthroughFragmentShaderString];
+        if (!self->displayProgram.initialized)
         {
-            [displayProgram addAttribute:@"position"];
-            [displayProgram addAttribute:@"inputTextureCoordinate"];
+            [self->displayProgram addAttribute:@"position"];
+            [self->displayProgram addAttribute:@"inputTextureCoordinate"];
             
-            if (![displayProgram link])
+            if (![self->displayProgram link])
             {
-                NSString *progLog = [displayProgram programLog];
+                NSString *progLog = [self->displayProgram programLog];
                 NSLog(@"Program link log: %@", progLog);
-                NSString *fragLog = [displayProgram fragmentShaderLog];
+                NSString *fragLog = [self->displayProgram fragmentShaderLog];
                 NSLog(@"Fragment shader compile log: %@", fragLog);
-                NSString *vertLog = [displayProgram vertexShaderLog];
+                NSString *vertLog = [self->displayProgram vertexShaderLog];
                 NSLog(@"Vertex shader compile log: %@", vertLog);
-                displayProgram = nil;
+                self->displayProgram = nil;
                 NSAssert(NO, @"Filter shader link failed");
             }
         }
         
         displayPositionAttribute = [displayProgram attributeIndex:@"position"];
-        displayTextureCoordinateAttribute = [displayProgram attributeIndex:@"inputTextureCoordinate"];
-        displayInputTextureUniform = [displayProgram uniformIndex:@"inputImageTexture"]; // This does assume a name of "inputTexture" for the fragment shader
+        self->displayTextureCoordinateAttribute = [displayProgram attributeIndex:@"inputTextureCoordinate"];
+        self->displayInputTextureUniform = [displayProgram uniformIndex:@"inputImageTexture"]; // This does assume a name of "inputTexture" for the fragment shader
 
-        [GPUImageContext setActiveShaderProgram:displayProgram];
-        glEnableVertexAttribArray(displayPositionAttribute);
-        glEnableVertexAttribArray(displayTextureCoordinateAttribute);
+        [GPUImageContext setActiveShaderProgram:self->displayProgram];
+        glEnableVertexAttribArray(self->displayPositionAttribute);
+        glEnableVertexAttribArray(self->displayTextureCoordinateAttribute);
         
         [self setBackgroundColorRed:0.0 green:0.0 blue:0.0 alpha:1.0];
-        _fillMode = kGPUImageFillModePreserveAspectRatio;
+        self->_fillMode = kGPUImageFillModePreserveAspectRatio;
         [self createDisplayFramebuffer];
     });
 }

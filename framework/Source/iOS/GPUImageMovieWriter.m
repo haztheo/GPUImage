@@ -42,7 +42,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 
 // Frame rendering
 - (void)createDataFBO;
-- (void)destroyDataFBO;
+//- (void)destroyDataFBO;
 - (void)setFilterFBO;
 
 - (void)renderAtInternalSizeUsingFramebuffer:(GPUImageFramebuffer *)inputFramebufferToUse;
@@ -97,8 +97,10 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     previousAudioTime = kCMTimeNegativeInfinity;
     inputRotation = kGPUImageNoRotation;
     
-    _movieWriterContext = [[GPUImageContext alloc] init];
-    [_movieWriterContext useSharegroup:[[[GPUImageContext sharedImageProcessingContext] context] sharegroup]];
+//    _movieWriterContext = [[GPUImageContext alloc] init];
+//    [_movieWriterContext useSharegroup:[[[GPUImageContext sharedImageProcessingContext] context] sharegroup]];
+    
+    _movieWriterContext = [GPUImageContext sharedImageProcessingContext];
 
     runSynchronouslyOnContextQueue(_movieWriterContext, ^{
         [_movieWriterContext useAsCurrentContext];
@@ -454,7 +456,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
         }
         
 //        NSLog(@"Recorded audio sample time: %lld, %d, %lld", currentSampleTime.value, currentSampleTime.timescale, currentSampleTime.epoch);
-        void(^write)() = ^() {
+        void(^write)(void) = ^() {
             while( ! assetWriterAudioInput.readyForMoreMediaData && ! _encodingLiveVideo && ! audioEncodingIsFinished ) {
                 NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.5];
                 //NSLog(@"audio waiting...");
@@ -615,7 +617,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     NSAssert(status == GL_FRAMEBUFFER_COMPLETE, @"Incomplete filter FBO: %d", status);
 }
 
-- (void)destroyDataFBO;
+- (void)destroyDataFBO
 {
     runSynchronouslyOnContextQueue(_movieWriterContext, ^{
         [_movieWriterContext useAsCurrentContext];
@@ -786,7 +788,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
             }
         }
         
-        void(^write)() = ^() {
+        void(^write)(void) = ^() {
             while( ! assetWriterVideoInput.readyForMoreMediaData && ! _encodingLiveVideo && ! videoEncodingIsFinished ) {
                 NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
                 //            NSLog(@"video waiting...");
@@ -803,7 +805,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
             }
             else
             {
-                NSLog(@"Couldn't write a frame");
+                NSLog(@"Couldn't write a frame : %ld", (long)self.assetWriter.status);
                 //NSLog(@"Wrote a video frame: %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, frameTime)));
             }
             CVPixelBufferUnlockBaseAddress(pixel_buffer, 0);
